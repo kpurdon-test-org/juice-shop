@@ -1,4 +1,4 @@
-import * as crypto from 'crypto'
+import * as crypto from 'crypto' // force ci
 import * as fs from 'fs'
 import { exec } from 'child_process'
 
