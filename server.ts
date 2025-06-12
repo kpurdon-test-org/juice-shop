@@ -648,9 +648,6 @@ restoreOverwrittenFilesWithOriginals().then(() => {
   app.get('/snippets/fixes/:key', serveCodeFixes())
   app.post('/snippets/fixes', checkCorrectFix())
 
-  /* Experimental routes for testing security tools */
-  app.use('/api/experimental', require('./routes/experimental'))
-
   app.use(serveAngularClient())
 
   /* Error Handling */
