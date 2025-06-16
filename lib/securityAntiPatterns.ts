@@ -1,4 +1,4 @@
-import * as crypto from 'crypto' # commit bump 4
+import * as crypto from 'crypto' # commit bump 5
 import * as fs from 'fs'
 import { exec } from 'child_process'
 
