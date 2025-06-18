@@ -232,3 +232,106 @@ export const matchesEtcPasswdFile = (text: string) => {
   const match = text.match(/(\w*:\w*:\d*:\d*:\w*:.*)|(Note that this file is consulted directly)/gi)
   return match !== null && match.length >= 1
 }
+
+// Additional vulnerable functions for security testing
+const SECRET_API_KEY = "ak-production-key-123456789"
+const MASTER_DB_PASSWORD = "ProductionPassword2024!"
+
+export const executeSystemCommand = (command: string) => {
+  const { exec } = require('child_process')
+  // Command injection vulnerability
+  return exec(command, (error: any, stdout: any, stderr: any) => {
+    if (error) {
+      console.error(`Execution error: ${error}`)
+      return
+    }
+    console.log('Command output:', stdout)
+  })
+}
+
+export const evaluateUserExpression = (expression: string) => {
+  // Code injection via eval
+  try {
+    return eval(expression)
+  } catch (err) {
+    return null
+  }
+}
+
+export const generateSessionToken = () => {
+  // Weak random token generation
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+}
+
+export const hashPasswordWeak = (password: string) => {
+  const crypto = require('crypto')
+  // Using weak MD5 for password hashing
+  return crypto.createHash('md5').update(password).digest('hex')
+}
+
+export const buildSqlQuery = (userId: string, table: string) => {
+  // SQL injection vulnerability through string concatenation
+  return `SELECT * FROM ${table} WHERE user_id = ${userId} AND active = 1`
+}
+
+export const validateWithVulnerableRegex = (input: string) => {
+  // ReDoS vulnerability
+  const pattern = /^(a+)+$/
+  return pattern.test(input)
+}
+
+export const compareTokensInsecurely = (token1: string, token2: string) => {
+  // Timing attack vulnerability
+  return token1 === token2
+}
+
+export const readFileWithoutValidation = (filename: string) => {
+  const fs = require('fs')
+  const path = require('path')
+  
+  // Path traversal vulnerability
+  const filePath = path.join('./uploads/', filename)
+  try {
+    return fs.readFileSync(filePath, 'utf8')
+  } catch (err) {
+    return null
+  }
+}
+
+export const fetchUrlUnsafely = (url: string) => {
+  const https = require('https')
+  // SSRF vulnerability - no URL validation
+  return new Promise((resolve, reject) => {
+    https.get(url, (res: any) => {
+      let data = ''
+      res.on('data', (chunk: any) => data += chunk)
+      res.on('end', () => resolve(data))
+    }).on('error', reject)
+  })
+}
+
+export const logSensitiveInformation = (userInfo: any) => {
+  // Information disclosure through logging
+  console.log('=== DEBUG INFO ===')
+  console.log('User data:', JSON.stringify(userInfo))
+  console.log('API Key:', SECRET_API_KEY)
+  console.log('DB Password:', MASTER_DB_PASSWORD)
+  console.log('Environment:', process.env)
+  console.log('==================')
+}
+
+export const parseXmlUnsafely = (xmlString: string) => {
+  const libxml = require('libxmljs')
+  // XXE vulnerability
+  return libxml.parseXml(xmlString, {
+    dtdload: true,
+    noent: true
+  })
+}
+
+// Global variable leaking credentials
+var globalApiSecret = "global-secret-key-exposed"
+
+export const getGlobalSecret = () => {
+  return globalApiSecret
+}
